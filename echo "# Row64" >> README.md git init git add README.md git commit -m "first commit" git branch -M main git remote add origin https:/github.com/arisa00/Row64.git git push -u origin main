@@ -1,0 +1,40 @@
+import matplotlib.colors as cl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import row64
+import seaborn as sns
+
+def ScatterPlotBasic(inDf, inCol1, inCol2):
+	col1 = inDf.columns[inCol1]
+	col2 = inDf.columns[inCol2]
+	sns.scatterplot(color="#1F77B4",data=inDf,x=col1,y=col2,s=25)
+
+def LinReg(inDf, inInd1, inInd2):
+	values1 = inDf[inDf.columns[inInd1]]
+	values2 = inDf[inDf.columns[inInd2]]
+	fig, ax = plt.subplots(figsize = (9, 9))
+	ax.scatter(values1, values2, s=60, alpha=0.7, edgecolors="k")
+b, a = np.polyfit(values1, values2, deg=1)
+	print("intercept: ", a)
+	print("coefficient: ", b)
+	xmin = min(values1)
+	xmax = max(values1)
+	
+	xrng = xmax - xmin
+	xseq = np.linspace(xmin-.1*xrng, xmax+.1*xrng, num=10)
+	ax.plot(xseq, a + b * xseq, color="k", lw=2.5)
+
+def ContourPlot(inDf, inCol1, inCol2):
+	col1 = inDf.columns[inCol1]
+	col2 = inDf.columns[inCol2]
+	sns.set_style("white")
+	sns.kdeplot(data=inDf,x=col1,y=col2,fill=True,common_norm=False,cmap="Blues")
+
+# From paste
+dfIn=row64.get_dataframe("Dataframe3")
+df=dfIn.copy(deep=True)
+ScatterPlotBasic(df,1,5)
+
+LinReg(df,2,6)
+ContourPlot(df,1,6)
